@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Online store like application",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrew-stehno/Bamazon.git"
+  },
+  "author": "Andrew Stehno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrew-stehno/Bamazon/issues"
+  },
+  "homepage": "https://github.com/andrew-stehno/Bamazon#readme",
+  "dependencies": {
+    "inquirer": "^7.0.0",
+    "mysql": "^2.17.1"
+  }
+}
