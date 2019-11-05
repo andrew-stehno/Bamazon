@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
@@ -6,11 +7,11 @@ let itemQuantity;
 let inStock;
 
 const connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "Password1234",
-    database: "bamazon_db"
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 });
 
 connection.connect(function (err) {
@@ -24,7 +25,7 @@ connection.connect(function (err) {
 function userPrompt() {
     connection.query("SELECT * FROM products", function (err, res) {
         console.log("\n Items available for purchase:" + "\n")
-        console.log(res);
+        console.table(res);
         console.log("\n");
 
         inquirer.prompt({
@@ -85,22 +86,30 @@ function verifyQuantity() {
 // once update goes through, show customer the total cost of their purchase
 function fullfillOrder() {
     newStockQty = inStock - itemQuantity;
+    let orderTotal = itemQuantity * chosenItem.price;
+    let productSales = orderTotal + chosenItem.product_sales;
+
     connection.query(
-        "UPDATE products SET ? WHERE ?",
+        "UPDATE products SET ?, ? WHERE ?",
         [
             {
                 stock_quantity: newStockQty
             },
             {
+                product_sales: productSales
+            },
+            {
                 item_id: chosenItem.item_id
             }
         ],
+
         function (err) {
             if (err) throw err;
-            let orderTotal = itemQuantity * chosenItem.price;
             console.log("\n Your order has successfully been placed!");
-            console.log("Your order total is $ " + orderTotal + "\n");
-            placeAnotherOrder();
+            connection.query("SELECT * FROM products", function (err, res) {
+                console.table(res);
+                placeAnotherOrder();
+            })
         }
     )
 };
