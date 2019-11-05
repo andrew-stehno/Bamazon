@@ -59,10 +59,8 @@ function requestQty() {
         name: "quantity",
         message: "What quantity would you like to order?",
         validate: function (value) {
-            if (isNaN(value) === false) {
-                return true;
-            }
-            return false;
+            var valid = !isNaN(parseFloat(value));
+            return valid || 'Please enter a number';
         },
     }).then(function (answer) {
         itemQuantity = answer.quantity;
@@ -99,7 +97,7 @@ function fullfillOrder() {
         ],
         function (err) {
             if (err) throw err;
-            let orderTotal = itemQuantity * chosenItem.price; 
+            let orderTotal = itemQuantity * chosenItem.price;
             console.log("\n Your order has successfully been placed!");
             console.log("Your order total is $ " + orderTotal + "\n");
             placeAnotherOrder();
@@ -114,13 +112,13 @@ function placeAnotherOrder() {
         message: "Would you like to place another order?",
         default: true
     })
-    .then(function(answer){
-        let myAnswer = answer.yesOrNo;
-        if (!myAnswer) {
-            connection.end();
-            console.log("\n The store connection has been terminated!");
-        } else {
-        userPrompt();
-        }
-    })
+        .then(function (answer) {
+            let myAnswer = answer.yesOrNo;
+            if (!myAnswer) {
+                connection.end();
+                console.log("\n The store connection has been terminated!");
+            } else {
+                userPrompt();
+            }
+        })
 };
